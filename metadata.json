@@ -1,0 +1,13 @@
+{
+  "name": "DeepInsight Learning Agent",
+  "description": "An AI-powered academic assistant that transforms complex documents into structured knowledge through logic decomposition, heuristic questioning, and Feynman testing.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "majorCapabilities": [
+    "AI Content Analysis",
+    "Heuristic Learning",
+    "Knowledge Mapping"
+  ]
+}
