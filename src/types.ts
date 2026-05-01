@@ -20,4 +20,5 @@ export interface AnalysisResult {
   logicMap: LogicPoint[];
   heuristicQuestions: HeuristicQuestion[];
   feynmanQuiz: FeynmanQuizItem[];
+  supplementalKnowledge: string;
 }

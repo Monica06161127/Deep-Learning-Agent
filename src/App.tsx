@@ -36,14 +36,43 @@ const COLORS = {
 export default function App() {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [logs, setLogs] = useState<string[]>([]);
   const [result, setResult] = useState<AnalysisResult | null>(null);
-  const [activeTab, setActiveTab] = useState<"logic" | "heuristic" | "quiz">("logic");
+  const [activeTab, setActiveTab] = useState<"logic" | "heuristic" | "knowledge" | "quiz">("logic");
   const [quizScore, setQuizScore] = useState<number | null>(null);
   const [quizAnswers, setQuizAnswers] = useState<Record<number, string>>({});
+
+  const simulateLogs = async () => {
+    const messages = [
+      "🚀 [AGENT START] Initiating Deep-Learning Workflow...",
+      `📊 [INPUT] Document received. Length: ${input.length} characters.`,
+      "🔍 [PROCESS] Step 1: Analyzing document structure and semantic clusters...",
+      "   ↳ [Thought] Scanning for key concepts and logical transitions...",
+      "✅ [SUCCESS] Semantic structure parsed.",
+      "🧠 [PROCESS] Step 2: Generating high-order reasoning questions...",
+      "   ↳ [Thought] Identifying logical gaps in the text...",
+      "✅ [SUCCESS] Deep-thinking questions generated.",
+      "🌐 [PROCESS] Step 3: Executing web-based knowledge retrieval...",
+      "   ↳ [Tool Call] Searching for related academic context...",
+      "   ↳ [Status] Connecting to Simulated Search API...",
+      "✅ [SUCCESS] External knowledge integrated into context.",
+      "📝 [PROCESS] Step 4: Synthesizing Feynman-style learning package...",
+      "   ↳ [Thought] Mapping extracted knowledge to pedagogical patterns...",
+      "✅ [SUCCESS] Learning package finalized.",
+      "🌈 [WORKFLOW COMPLETE] All tasks finished successfully."
+    ];
+    
+    for (const msg of messages) {
+      setLogs(prev => [...prev, msg].slice(-8)); // Keep more logs visible
+      await new Promise(resolve => setTimeout(resolve, 600));
+    }
+  };
 
   const handleAnalyze = async () => {
     if (!input.trim()) return;
     setIsLoading(true);
+    setLogs([]);
+    simulateLogs();
     try {
       const data = await analyzeContent(input);
       setResult(data);
@@ -183,7 +212,34 @@ export default function App() {
                 </div>
               </div>
               <h2 className="text-4xl font-bold mt-8 tracking-tight">Synthesizing Core Concepts...</h2>
-              <p className="mt-4 text-[#1A1A1A]/50 italic">"Simplification is the ultimate sophistication." — Leonardo da Vinci</p>
+              
+              <div className="mt-8 w-full max-w-md bg-[#1A1A1A] p-4 rounded-xl shadow-2xl border border-white/5 font-mono text-left">
+                <div className="flex gap-1.5 mb-3">
+                  <div className="w-2.5 h-2.5 rounded-full bg-red-500/50" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/50" />
+                  <div className="w-2.5 h-2.5 rounded-full bg-green-500/50" />
+                </div>
+                <div className="space-y-1">
+                  {logs.map((log, i) => (
+                    <motion.div 
+                      key={i} 
+                      initial={{ opacity: 0, x: -5 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="text-[10px] text-emerald-500/80 flex gap-2"
+                    >
+                      <span className="text-emerald-500/30">[{new Date().toLocaleTimeString([], { hour12: false })}]</span>
+                      <span>{log}</span>
+                    </motion.div>
+                  ))}
+                  <motion.div 
+                    animate={{ opacity: [1, 0] }}
+                    transition={{ repeat: Infinity, duration: 0.8 }}
+                    className="w-1.5 h-3 bg-emerald-500/50 inline-block align-middle ml-1"
+                  />
+                </div>
+              </div>
+
+              <p className="mt-8 text-[#1A1A1A]/50 italic text-sm">"Simplification is the ultimate sophistication." — Leonardo da Vinci</p>
             </motion.div>
           ) : (
             result && (
@@ -208,6 +264,7 @@ export default function App() {
                     {[
                       { id: "logic", icon: Search, label: "Logic Map" },
                       { id: "heuristic", icon: BrainCircuit, label: "Heuristics" },
+                      { id: "knowledge", icon: BookOpen, label: "Retrieval" },
                       { id: "quiz", icon: ClipboardCheck, label: "Feynman Quiz" }
                     ].map(tab => (
                       <button
@@ -301,6 +358,29 @@ export default function App() {
                               </div>
                             </div>
                           ))}
+                        </motion.div>
+                      )}
+
+                      {activeTab === "knowledge" && (
+                        <motion.div 
+                          key="knowledge-content"
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -20 }}
+                          className="bg-white p-10 rounded-[40px] shadow-sm border border-[#1A1A1A]/5"
+                        >
+                          <div className="flex items-center gap-4 mb-8">
+                            <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center text-blue-500 border border-blue-100">
+                              <BookOpen className="w-6 h-6" />
+                            </div>
+                            <div>
+                              <h3 className="text-2xl font-bold tracking-tight">Supplementary Knowledge</h3>
+                              <p className="text-xs text-[#1A1A1A]/40 font-bold uppercase tracking-widest mt-1">Simulated Context Retrieval</p>
+                            </div>
+                          </div>
+                          <div className="prose prose-slate max-w-none prose-p:leading-relaxed prose-p:text-[#1A1A1A]/70">
+                            <ReactMarkdown>{result.supplementalKnowledge}</ReactMarkdown>
+                          </div>
                         </motion.div>
                       )}
 

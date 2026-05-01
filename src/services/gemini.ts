@@ -14,7 +14,8 @@ export async function analyzeContent(content: string): Promise<AnalysisResult> {
   1. A concise summary of the core message.
   2. A "Logic Map": Identify the main arguments and the evidence supporting them.
   3. "Heuristic Questions": 3-5 deep, open-ended questions that challenge the reader's understanding.
-  4. A "Feynman Quiz": 3-5 multiple-choice questions designed to test if the user has internalized the knowledge.
+  4. "Supplementary Knowledge": Simulated web-retrieval info that complements the content (e.g., related research, historical context, or practical applications).
+  5. A "Feynman Quiz": 3-5 multiple-choice questions designed to test if the user has internalized the knowledge.
   `;
 
   const response = await ai.models.generateContent({
@@ -48,6 +49,7 @@ export async function analyzeContent(content: string): Promise<AnalysisResult> {
               required: ["question", "context"],
             },
           },
+          supplementalKnowledge: { type: Type.STRING },
           feynmanQuiz: {
             type: Type.ARRAY,
             items: {
@@ -65,7 +67,7 @@ export async function analyzeContent(content: string): Promise<AnalysisResult> {
             },
           },
         },
-        required: ["summary", "logicMap", "heuristicQuestions", "feynmanQuiz"],
+        required: ["summary", "logicMap", "heuristicQuestions", "supplementalKnowledge", "feynmanQuiz"],
       },
     },
   });
